@@ -1,13 +1,11 @@
 # Docker Build Stage
 FROM maven:3-jdk-8-alpine AS build
 
-
 # Build Stage
 WORKDIR /opt/app
 
 COPY ./ /opt/app
 RUN mvn clean package -DskipTests
-
 
 # Docker Build Stage
 FROM openjdk:8-jdk-alpine
