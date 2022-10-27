@@ -19,14 +19,14 @@ node {
           stage('Build docker') {
               echo "ArtifactId: ${env.ARTIFACT_ID}"
               echo "Version: ${env.VERSION}"
-              //dockerImage = docker.build("repository-test:${env.BUILD_NUMBER}")
+              dockerImage = docker.build("${env.ARTIFACT_ID}:${env.VERSION}")
           }
 
           stage('Deploy docker') {
-              //echo "Docker Image Tag Name: ${dockerImageTag}"
-              //sh "docker stop repository-test || true && docker rm repository-test || true"
+              echo "Docker Image Tag Name: ${dockerImageTag}"
+              sh "docker stop ${env.ARTIFACT_ID} || true && docker rm ${env.ARTIFACT_ID} || true"
               /*sh "docker run --name repository-test --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 -d -p 8282:8282 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro repository-test:${env.BUILD_NUMBER}"*/
-              //sh "docker run --name repository-test --restart=on-failure --detach -d -p 8282:8282 repository-test:${env.BUILD_NUMBER}"
+              sh "docker run --name ${env.ARTIFACT_ID} --restart=on-failure --detach -d -p 8282:8282 ${env.ARTIFACT_ID}:${env.VERSION}"
           }
     } catch(e) {
         //currentBuild.result = "FAILED"
