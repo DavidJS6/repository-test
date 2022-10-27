@@ -19,6 +19,7 @@ node {
           stage('Build docker') {
               echo "ArtifactId: ${env.ARTIFACT_ID}"
               echo "Version: ${env.VERSION}"
+              //sh "docker image rm ${env.ARTIFACT_ID}:${env.VERSION}"
               dockerImage = docker.build("${env.ARTIFACT_ID}:${env.VERSION}")
           }
 
