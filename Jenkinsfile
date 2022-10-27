@@ -10,19 +10,23 @@ node {
             git url: 'https://github.com/DavidJS6/repository-test.git',
                 //credentialsId: 'springdeploy-user',
                 branch: 'master'
+             
+             script {
+                env.ARTIFACT_ID = readMavenPom().getArtifactId()
+                env.VERSION = readMavenPom().getVersion()
+             }
          }
           stage('Build docker') {
-                 dockerImage = docker.build("repository-test:${env.BUILD_NUMBER}")
+              echo "ArtifactId: ${env.ARTIFACT_ID}"
+              echo "Version: ${env.VERSION}"
+              //dockerImage = docker.build("repository-test:${env.BUILD_NUMBER}")
           }
 
           stage('Deploy docker') {
-                  echo "Docker Image Tag Name: ${dockerImageTag}"
-                  sh "docker stop repository-test || true && docker rm repository-test || true"
-                  //sh "docker run --name repository-test -d -p 8282:8282 repository-test:${env.BUILD_NUMBER}"
-                  //sh "docker run --name repository-test --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 -d -p 8282:8282 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro repository-test:${env.BUILD_NUMBER}"
-                  sh "docker run --name repository-test --restart=on-failure --detach -d -p 8282:8282 repository-test:${env.BUILD_NUMBER}"
-                  //bat "docker stop repository-test || true && docker rm repository-test || true"
-                  //bat "docker run --name repository-test --restart=on-failure --detach -d -p 8282:8282 repository-test:${env.BUILD_NUMBER}"
+              //echo "Docker Image Tag Name: ${dockerImageTag}"
+              //sh "docker stop repository-test || true && docker rm repository-test || true"
+              /*sh "docker run --name repository-test --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 -d -p 8282:8282 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro repository-test:${env.BUILD_NUMBER}"*/
+              //sh "docker run --name repository-test --restart=on-failure --detach -d -p 8282:8282 repository-test:${env.BUILD_NUMBER}"
           }
     } catch(e) {
         //currentBuild.result = "FAILED"
