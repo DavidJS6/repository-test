@@ -4,6 +4,9 @@ FROM maven:3-jdk-8-alpine AS build
 # Build Stage
 WORKDIR /opt/app
 
+ADD ./pom.xml /opt/app/pom.xml
+RUN mvn verify clean --fail-never
+
 COPY ./ /opt/app
 RUN mvn clean package -DskipTests
 
